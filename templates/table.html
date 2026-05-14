@@ -1,21 +1,216 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Data Table</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-        th, td {
-            border: 1px solid black;
-            padding: 8px;
-            text-align: left;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>NetGuard AI — Prediction Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #050d1a; --bg2: #0a1628; --bg3: #0f2040;
+    --accent: #00e5ff; --accent2: #ff3d71; --accent3: #00ff88;
+    --text: #e0f0ff; --text-muted: #6a8aaa;
+    --border: rgba(0,229,255,0.15);
+    --mono: 'Share Tech Mono', monospace;
+    --sans: 'DM Sans', sans-serif;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none; z-index: 0;
+  }
+  .container {
+    position: relative; z-index: 1;
+    max-width: 1280px; margin: 0 auto;
+  }
+  .header {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .header-left {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .shield {
+    width: 32px; height: 32px;
+    border: 2px solid var(--accent);
+    border-radius: 4px 4px 14px 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .shield::after {
+    content: '';
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--accent);
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 1rem;
+    color: var(--accent);
+    letter-spacing: 0.05em;
+  }
+  .back-btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.6rem 1.2rem;
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    color: var(--accent);
+    background: transparent;
+    cursor: pointer;
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(0,229,255,0.1); }
+
+  .result-header {
+    background: rgba(10,22,40,0.8);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .result-title {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+  }
+  .summary-row {
+    display: flex; gap: 2rem; flex-wrap: wrap;
+  }
+  .summary-item { display: flex; flex-direction: column; gap: 4px; }
+  .summary-label { font-size: 0.65rem; font-family: var(--mono); color: var(--text-muted); letter-spacing: 0.1em; text-transform: uppercase; }
+  .summary-val { font-size: 1.3rem; font-weight: 600; font-family: var(--mono); color: var(--accent); }
+  .summary-val.green { color: var(--accent3); }
+  .summary-val.red { color: var(--accent2); }
+
+  .table-card {
+    background: rgba(10,22,40,0.8);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.78rem;
+  }
+  thead tr { background: #0f2040; border-bottom: 1px solid var(--border); }
+  thead th {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid rgba(0,229,255,0.05); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: rgba(0,229,255,0.04); }
+  tbody td {
+    padding: 0.65rem 1rem;
+    white-space: nowrap;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: #b0d0ee;
+  }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 3px; }
+</style>
 </head>
 <body>
-    <h2>Predicted Data</h2>
+<div class="container">
+  <div class="header">
+    <div class="header-left">
+      <div class="shield"></div>
+      <span class="brand">NETGUARD_AI</span>
+    </div>
+    <a href="/" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <div class="result-header">
+    <div class="result-title">◈ Prediction Results</div>
+    <div class="summary-row" id="summary-row">
+      <!-- populated by JS -->
+      <div class="summary-item">
+        <span class="summary-label">Status</span>
+        <span class="summary-val green">Complete</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card">
     {{ table | safe }}
+  </div>
+</div>
+
+<script>
+  // Post-render: count safe vs threats, style predicted_column cells
+  document.addEventListener('DOMContentLoaded', () => {
+    const table = document.querySelector('table');
+    if (!table) return;
+
+    // Find predicted_column index
+    const headers = Array.from(table.querySelectorAll('thead th, thead td'));
+    let predIdx = -1;
+    headers.forEach((h, i) => {
+      if (h.textContent.toLowerCase().includes('predicted')) predIdx = i;
+    });
+
+    let safe = 0, threat = 0, total = 0;
+    const rows = table.querySelectorAll('tbody tr');
+    total = rows.length;
+
+    rows.forEach(row => {
+      const cells = row.querySelectorAll('td');
+      const targetCell = predIdx >= 0 ? cells[predIdx] : cells[cells.length - 1];
+      if (!targetCell) return;
+      const val = targetCell.textContent.trim();
+      if (val === '1' || val === '-1') {
+        targetCell.innerHTML = '<span style="font-family:var(--mono);font-size:0.68rem;color:var(--accent2);background:rgba(255,61,113,0.1);border:1px solid rgba(255,61,113,0.25);padding:2px 8px;border-radius:3px;">⚠ Threat</span>';
+        threat++;
+      } else if (val === '0') {
+        targetCell.innerHTML = '<span style="font-family:var(--mono);font-size:0.68rem;color:var(--accent3);background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.25);padding:2px 8px;border-radius:3px;">✓ Safe</span>';
+        safe++;
+      }
+    });
+
+    // Inject summary stats
+    const sumRow = document.getElementById('summary-row');
+    sumRow.innerHTML = `
+      <div class="summary-item"><span class="summary-label">Total Records</span><span class="summary-val">${String(total).padStart(4,'0')}</span></div>
+      <div class="summary-item"><span class="summary-label">Safe Traffic</span><span class="summary-val green">${safe}</span></div>
+      <div class="summary-item"><span class="summary-label">Threats Detected</span><span class="summary-val red">${threat}</span></div>
+      <div class="summary-item"><span class="summary-label">Threat Rate</span><span class="summary-val ${threat > 0 ? 'red' : 'green'}">${total > 0 ? ((threat/total)*100).toFixed(1) : 0}%</span></div>
+    `;
+  });
+</script>
 </body>
 </html>
