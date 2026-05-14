@@ -5,6 +5,10 @@ pymongo
 certifi
 scikit-learn
 pyaml
+mlflow
+dagshub
+fastapi[standard]
+uvicorn
 
 
 ##-e .
