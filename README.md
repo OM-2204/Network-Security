@@ -12,7 +12,7 @@
 # 🛡️ NetGuard AI — Network Security Intelligence Platform
 
 **End-to-End MLOps Pipeline for Network Intrusion Detection**  
-**FastAPI · Scikit-learn · MongoDB · MLflow · Docker · AWS EC2**
+**FastAPI · Scikit-learn · MongoDB · MLflow · Docker**
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Latest-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
@@ -28,18 +28,18 @@
 
 ## 📌 Overview
 
-**NetGuard AI** is a production-grade, end-to-end **MLOps system** for detecting network intrusions and classifying malicious traffic. Built on the **NSL-KDD dataset**, it implements a complete **ETL pipeline**, automated ML training with **Random Forest**, and **CI/CD deployment to AWS EC2** via Docker and GitHub Actions.
+**NetGuard AI** is a production-grade, end-to-end **MLOps system** for detecting network intrusions and classifying malicious traffic. Built on the **NSL-KDD dataset**, it implements a complete **ETL pipeline** and automated ML training with **Random Forest**.
 
 The system achieves **99.14% F1-score** across experiment runs tracked on **MLflow + DagsHub**, and ships a professional **cyberpunk-themed web dashboard** for real-time threat prediction.
 
-> **TL;DR:** CSV network traffic → ETL → Train → Predict → Deploy to AWS. Every stage automated.
+> **TL;DR:** CSV network traffic → ETL → Train → Predict. Every stage automated.
 
 ---
 
 ## 🖥️ UI Preview
 
 ### Dashboard — NetGuard AI
-![NetGuard AI Dashboard](assets\dashboard.png)
+![NetGuard AI Dashboard](assets/dashboard.png)
 
 > Dark-mode dashboard with drag-and-drop CSV upload, 5-stage pipeline visualizer, live prediction counter, and row-by-row threat classification results.
 
@@ -48,7 +48,7 @@ The system achieves **99.14% F1-score** across experiment runs tracked on **MLfl
 ## 📊 MLflow Experiment Tracking
 
 ### Experiment Runs on DagsHub
-![MLflow Experiments](assets\experiments.png)
+![MLflow Experiments](assets/experiments.png)
 
 | Run | F1 Score | Precision | Recall |
 |-----|----------|-----------|--------|
@@ -58,7 +58,7 @@ The system achieves **99.14% F1-score** across experiment runs tracked on **MLfl
 | adaptable-sh... | 0.9739 | 0.9666 | 0.9814 |
 
 ### Parallel Coordinates Plot — MLflow UI
-![MLflow Parallel Coordinates](assets\mlflow_parallel.png)
+![MLflow Parallel Coordinates](assets/mlflow_parallel.png)
 
 > 4 runs compared across F1, Precision, and Recall. Top 2 runs (red) consistently outperform across all three metrics.
 
@@ -94,17 +94,6 @@ The system achieves **99.14% F1-score** across experiment runs tracked on **MLfl
 ║  train.csv     valid paths    .pkl            metrics    Yes → Push  ║
 ║  test.csv                    train.npy                   No  → None  ║
 ║                               test.npy                               ║
-╚══════════════════════════════════════════════════════════════════════╝
-                                   │
-                                   ▼
-╔══════════════════════════════════════════════════════════════════════╗
-║                     CI/CD DEPLOYMENT                                 ║
-║                                                                      ║
-║  GitHub Push ──► GitHub Actions ──► Docker Build ──► AWS ECR        ║
-║                       CI/CD             Image          Registry      ║
-║                         │                                  │         ║
-║                    App Runner ◄──────────────── AWS EC2 ◄──┘        ║
-║                   (CD Pipeline)                 Instance             ║
 ╚══════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -215,45 +204,9 @@ Load numpy arrays (train.npy + test.npy)
 
 ```
 Model Evaluation
-     ├── Model Accepted? ──► YES ──► Model Pusher ──► Cloud / AWS / Azure
+     ├── Model Accepted? ──► YES ──► Model Pusher ──► Save to final_model/
      └── Model Accepted? ──► NO  ──► None (no push)
 ```
-
----
-
-## 🐳 CI/CD — AWS EC2 Deployment
-
-Full automated deployment via **GitHub Actions + Docker + AWS**:
-
-```
-① Developer pushes code to GitHub
-          │
-          ▼
-② GitHub Actions triggers CI pipeline
-   └── Runs tests, linting
-          │
-          ▼
-③ Docker Image built from Dockerfile
-          │
-          ▼
-④ Image pushed to AWS ECR (Elastic Container Registry)
-          │
-          ▼
-⑤ AWS EC2 instance pulls latest image via App Runner (CD)
-          │
-          ▼
-⑥ FastAPI app live on EC2 — serving predictions
-```
-
-**GitHub Secrets required:**
-
-| Secret | Description |
-|--------|-------------|
-| `AWS_ACCESS_KEY_ID` | AWS IAM access key |
-| `AWS_SECRET_ACCESS_KEY` | AWS IAM secret key |
-| `AWS_DEFAULT_REGION` | e.g. `us-east-1` |
-| `ECR_REPOSITORY_NAME` | Your ECR repo name |
-| `AWS_ECR_LOGIN_URI` | ECR login URI |
 
 ---
 
@@ -266,8 +219,11 @@ Network-Security/
 ├── requirements.txt                    # Python dependencies
 ├── Dockerfile                          # Docker image config
 ├── .env                                # Environment variables (not committed)
-├── .github/
-│   └── workflows/main.yaml             # GitHub Actions CI/CD pipeline
+│
+├── assets/                             # README screenshots
+│   ├── dashboard.png
+│   ├── experiments.png
+│   └── mlflow_parallel.png
 │
 ├── templates/
 │   ├── index.html                      # Dashboard UI
@@ -315,7 +271,7 @@ Network-Security/
 | 📊 **Experiment Tracking** | MLflow 3.5.1 + DagsHub — 4 runs with full metrics |
 | 🌐 **FastAPI Backend** | Production REST API with Swagger at `/docs` |
 | 🖥️ **Professional Dashboard** | Cyberpunk dark UI with drag-and-drop CSV prediction |
-| 🐳 **Docker + CI/CD** | GitHub Actions → AWS ECR → AWS EC2 auto-deploy |
+| 🐳 **Docker Support** | Containerized for easy local and cloud deployment |
 | 📁 **CSV Prediction** | Upload NSL-KDD CSV → row-by-row ✅ Safe / ⚠️ Threat labels |
 | ✅ **99.14% F1-Score** | Best run across 4 MLflow-tracked experiments |
 
@@ -334,9 +290,6 @@ Network-Security/
 | **Experiment Tracking** | MLflow 3.5.1 + DagsHub |
 | **Database** | MongoDB Atlas (PyMongo) |
 | **Containerization** | Docker |
-| **CI/CD** | GitHub Actions |
-| **Cloud Registry** | AWS ECR (Elastic Container Registry) |
-| **Cloud Compute** | AWS EC2 + App Runner |
 | **Dataset** | NSL-KDD Network Intrusion Dataset |
 | **Frontend** | Jinja2 Templates + Vanilla JS |
 
