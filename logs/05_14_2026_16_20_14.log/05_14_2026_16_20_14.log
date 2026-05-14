@@ -1,0 +1,6 @@
+[2026-05-14 16:20:23,187] 1025 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[2026-05-14 16:20:23,220] 107 - dagshub - INFO - Accessing as OM-2204
+[2026-05-14 16:20:24,574] 1025 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/OM-2204/Network-Security "HTTP/1.1 200 OK"
+[2026-05-14 16:20:25,928] 1025 - httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
+[2026-05-14 16:20:25,931] 107 - dagshub - INFO - Initialized MLflow to track repo "OM-2204/Network-Security"
+[2026-05-14 16:20:25,933] 107 - dagshub - INFO - Repository OM-2204/Network-Security initialized!
