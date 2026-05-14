@@ -40,7 +40,7 @@ The system achieves **99.14% F1-score** across experiment runs tracked on **MLfl
 ## 🖥️ UI Preview
 
 ### Dashboard — NetGuard AI
-![NetGuard AI Dashboard](assets/dashboard.png)
+![NetGuard AI Dashboard](assets\dashboard.png)
 
 > Dark-mode dashboard with drag-and-drop CSV upload, 5-stage pipeline visualizer, live prediction counter, and row-by-row threat classification results.
 
@@ -49,7 +49,7 @@ The system achieves **99.14% F1-score** across experiment runs tracked on **MLfl
 ## 📊 MLflow Experiment Tracking
 
 ### Experiment Runs on DagsHub
-![MLflow Experiments](assets/experiments.png)
+![MLflow Experiments](assets\experiments.png)
 
 | Run | F1 Score | Precision | Recall |
 |-----|----------|-----------|--------|
@@ -59,7 +59,7 @@ The system achieves **99.14% F1-score** across experiment runs tracked on **MLfl
 | adaptable-sh... | 0.9739 | 0.9666 | 0.9814 |
 
 ### Parallel Coordinates Plot — MLflow UI
-![MLflow Parallel Coordinates](assets/mlflow_parallel.png)
+![MLflow Parallel Coordinates](assets\mlflow_parallel.png)
 
 > 4 runs compared across F1, Precision, and Recall. Top 2 runs (red) consistently outperform across all three metrics.
 
