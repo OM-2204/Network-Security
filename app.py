@@ -82,11 +82,17 @@ async def predict_route(request: Request, file: UploadFile = File(...)):
     """
     try:
         df = pd.read_csv(file.file)
+        if "Result" in df.columns:
+            df = df.drop(columns=["Result"])
+            
         preprocessor = load_object("final_model/preprocessor.pkl")
         final_model = load_object("final_model/model.pkl")
         network_model = NetworkModel(preprocessor=preprocessor, model=final_model)
         y_pred = network_model.predict(df)
         df['predicted_column'] = y_pred
+
+        if "Result" in df.columns:
+            df = df.drop(columns=["Result"])
 
         # Save output
         os.makedirs('prediction_output', exist_ok=True)
